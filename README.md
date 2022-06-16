@@ -25,18 +25,16 @@ O App foi criado com a intenção de poder mostrar para o usuario qual é a melh
 
 ![pageLogger](./images/paglogger.png)
 
-**PageCadastro**
+**PageCadastro:**
 
 ![PageCadastro](./images/pagcadastro.png)
 
-
-**PageCadastroPraia**
+**PageCadastroPraia:**
 
 ![PageCadastro](./images/pagcadastropraia.png)
 
 **Possui responsividade, ou seja Funciona em aparelhos moveis!**
 
 ![Mobile](./images/mobile.jpeg)
-
 
 **Este App foi Desenvolvido por https://github.com/waldemarnt / Estudado e Revisado por https://github.com/leandrofuenge**

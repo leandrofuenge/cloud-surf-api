@@ -2,30 +2,34 @@ import { Beach, GeoPosition } from '@src/models/beach';
 import nock from 'nock';
 import stormGlassWeather3HoursFixture from '../fixtures/stormglass_weather_3_hours.json';
 import apiForecastResponse1BeachFixture from '../fixtures/api_forecast_response_1_beach.json';
-import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
+import CacheUtil from '@src/util/cache';
+import { UserMongoDBRepository } from '@src/repositories/userMongoDBRepository';
 
 describe('Beach forecast functional tests', () => {
-  const defaultUser: User = {
+  const defaultUser = {
     name: 'John Doe',
     email: 'john3@mail.com',
     password: '1234',
   };
   let token: string;
   beforeEach(async () => {
+    const userRepository = new UserMongoDBRepository();
     await Beach.deleteMany({});
-    await User.deleteMany({});
-    const user = await new User(defaultUser).save();
+    await userRepository.deleteAll();
+    const user = await userRepository.create(defaultUser);
     const defaultBeach = {
       lat: -33.792726,
       lng: 151.289824,
       name: 'Manly',
       position: GeoPosition.E,
-      user: user.id,
+      userId: user.id,
     };
     await new Beach(defaultBeach).save();
-    token = AuthService.generateToken(user.toJSON());
+    token = AuthService.generateToken(user.id);
+    CacheUtil.clearAllCache();
   });
+
   it('should return a forecast with just a few times', async () => {
     nock('https://api.stormglass.io:443', {
       encodedQueryParams: true,

@@ -30,5 +30,3 @@ Executa o [PRETTIER](https://prettier.io/) <br />
 
 - [React App](https://facebook.github.io/create-react-app/docs/getting-started)
 - [React-query](https://react-query.tanstack.com/)
-
-**Este App foi Desenvolvido por https://github.com/waldemarnt / Estudado e Revisado por https://github.com/leandrofuenge**

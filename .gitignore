@@ -63,4 +63,7 @@ typings/
 # typescript compiled code
 dist/
 
-# ngrok
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

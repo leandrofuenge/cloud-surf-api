@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\config",
+    "\\diagrams",
+    "\\src",
+    "\\src\\controllers",
+    "\\src\\middlewares",
+    "\\src\\models",
+    "\\test",
+    "\\web"
+  ],
+  "SelectedNode": "\\src\\server.ts",
+  "PreviewInSolutionExplorer": false
+}

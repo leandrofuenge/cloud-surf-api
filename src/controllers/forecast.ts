@@ -5,13 +5,13 @@ import {
   Middleware,
 } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { Beach } from '@src/models/beach';
-import { Forecast } from '@src/services/forecast';
+import { BeachForecast, Forecast } from '@src/services/forecast';
 import { authMiddleware } from '@src/middlewares/auth';
 import { BaseController } from '.';
 import logger from '@src/logger';
 import rateLimit from 'express-rate-limit';
 import ApiError from '@src/util/errors/api-error';
+import { BeachRepository } from '@src/repositories';
 
 const forecast = new Forecast();
 
@@ -34,6 +34,10 @@ const rateLimiter = rateLimit({
 @Controller('forecast')
 @ClassMiddleware(authMiddleware)
 export class ForecastController extends BaseController {
+  constructor(private beachRepository: BeachRepository) {
+    super();
+  }
+
   @Get('')
   @Middleware(rateLimiter)
   public async getForecastForgeLoggedUser(
@@ -41,8 +45,31 @@ export class ForecastController extends BaseController {
     res: Response
   ): Promise<void> {
     try {
-      const beaches = await Beach.find({ user: req.decoded?.id });
-      const forecastData = await forecast.processForecastForBeaches(beaches);
+      const {
+        orderBy,
+        orderField,
+      }: {
+        orderBy?: 'asc' | 'desc';
+        orderField?: keyof BeachForecast;
+      } = req.query;
+
+      if (!req.context.userId) {
+        this.sendErrorResponse(res, {
+          code: 500,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      const beaches = await this.beachRepository.findAllBeachesForUser(
+        req.context.userId
+      );
+      const forecastData = await forecast.processForecastForBeaches(
+        beaches,
+        orderBy,
+        orderField
+      );
       res.status(200).send(forecastData);
     } catch (error) {
       logger.error(error);

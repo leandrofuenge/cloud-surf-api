@@ -22,9 +22,27 @@ function AuthenticatedApp() {
         <Header user={user} logout={logout} />
         <AppRoutes />
         <Footer>
-
-          <h3>software engineering development studies / software engineering student: Leandro costa</h3>
-
+          Made with{' '}
+          <span role="img" aria-label="emoji man surfer">
+            {' '}
+            🏄🏽‍♂️{' '}
+          </span>{' '}
+          +{' '}
+          <span role="img" aria-label="emoji blue heart">
+            {' '}
+            💙{' '}
+          </span>
+          by{' '}
+          <a href="https://walde.co/" target="_blank" rel="noopener noreferrer">
+            walde.co
+          </a>
+          <a
+            href="https://www.youtube.com/user/waldemaneto"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Youtube
+          </a>
         </Footer>
       </ContentWrapper>
     </ErrorBoundary>

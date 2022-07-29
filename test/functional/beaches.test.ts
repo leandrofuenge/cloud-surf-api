@@ -1,6 +1,6 @@
-import { Beach } from '@src/models/beach';
-import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
+import { Beach } from '@src/models/beach';
+import { UserMongoDBRepository } from '@src/repositories/userMongoDBRepository';
 
 describe('Beaches functional tests', () => {
   const defaultUser = {
@@ -11,10 +11,11 @@ describe('Beaches functional tests', () => {
 
   let token: string;
   beforeEach(async () => {
+    const userRepository = new UserMongoDBRepository();
     await Beach.deleteMany({});
-    await User.deleteMany({});
-    const user = await new User(defaultUser).save();
-    token = AuthService.generateToken(user.toJSON());
+    await userRepository.deleteAll();
+    const user = await userRepository.create(defaultUser);
+    token = AuthService.generateToken(user.id);
   });
 
   describe('When creating a new beach', () => {
@@ -56,8 +57,27 @@ describe('Beaches functional tests', () => {
       });
     });
 
-    it.skip('should return 500 when there is any error other than validation error', async () => {
-      //TODO think in a way to throw a 500
+    it('should return 500 when there is any error other than validation error', async () => {
+      jest
+        .spyOn(Beach.prototype, 'save')
+        .mockRejectedValueOnce('fail to create beach');
+      const newBeach = {
+        lat: -33.792726,
+        lng: 46.43243,
+        name: 'Manly',
+        position: 'E',
+      };
+
+      const response = await global.testRequest
+        .post('/beaches')
+        .send(newBeach)
+        .set({ 'x-access-token': token });
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({
+        code: 500,
+        error: 'Internal Server Error',
+        message: 'Something went wrong!',
+      });
     });
   });
 });
